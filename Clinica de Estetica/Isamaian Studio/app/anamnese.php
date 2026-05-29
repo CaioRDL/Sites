@@ -1,7 +1,27 @@
 <?php
 
-    require_once("../config/bootstrap.php");
-    require_once '../config/verificar_login.php';
+require_once("../config/bootstrap.php");
+require_once("../config/verificar_login.php");
+
+/* =========================
+   BUSCANDO PACIENTES
+========================= */
+
+$sql = "
+
+    SELECT
+        id_paciente,
+        nome_completo
+    FROM pacientes
+    ORDER BY nome_completo ASC
+
+";
+
+$stmt = $conexao->prepare($sql);
+
+$stmt->execute();
+
+$pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -11,6 +31,7 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Ficha de Anamnese</title>
@@ -22,7 +43,9 @@
 <body>
 
     <!-- SIDEBAR -->
+
     <?php include('../components/sidebar.php'); ?>
+
     <!-- MAIN -->
 
     <main class="main">
@@ -33,7 +56,9 @@
 
             <div>
 
-                <h2>Ficha de Anamnese</h2>
+                <h2>
+                    Ficha de Anamnese
+                </h2>
 
                 <p>
                     Anamnese > Nova Anamnese
@@ -55,31 +80,49 @@
 
         <section class="form-section">
 
-            <!-- PACIENTE -->
-
-            <h2>Dados do paciente</h2>
-
-            <div class="input-group margin-top">
-
-                <select name="id_paciente">
-
-                    <option value="">
-                        Juliana Martins
-                    </option>
-
-                </select>
-
-            </div>
-
-            <!-- INFORMAÇÕES GERAIS -->
-
-            <div class="section-divider"></div>
-
-            <h2 class="section-title">
-                1. Informações Gerais
+            <h2>
+                Dados do paciente
             </h2>
 
-            <form action="" method="POST">
+            <form action="../controllers/anamnese_controller.php" method="POST">
+
+                <!-- PACIENTE -->
+
+                <div class="input-group margin-top">
+
+                    <label>
+                        Paciente
+                    </label>
+
+                    <select name="id_paciente" name="id_paciente" required>
+
+                        <option value="">
+                            Selecione um paciente
+                        </option>
+
+                        <?php foreach ($pacientes as $paciente): ?>
+
+                            <option value="<?= $paciente['id_paciente']; ?>">
+
+                                <?= $paciente['nome_completo']; ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
+                <!-- DIVISOR -->
+
+                <div class="section-divider"></div>
+
+                <!-- INFORMAÇÕES GERAIS -->
+
+                <h2 class="section-title">
+                    1. Informações Gerais
+                </h2>
 
                 <div class="form-grid">
 
@@ -91,7 +134,7 @@
                             data_anamnese
                         </label>
 
-                        <input type="date" name="data_anamnese">
+                        <input type="date" name="data_anamnese" required>
 
                     </div>
 
@@ -103,17 +146,17 @@
                             profissional_responsavel
                         </label>
 
-                        <select name="profissional_responsavel">
+                        <select name="profissional_responsavel" required>
 
                             <option value="">
                                 Selecione
                             </option>
 
-                            <option value="ana">
+                            <option value="Ana Paula">
                                 Ana Paula
                             </option>
 
-                            <option value="juliana">
+                            <option value="Juliana">
                                 Juliana
                             </option>
 
@@ -136,9 +179,11 @@
 
                 </div>
 
-                <!-- HISTÓRICO -->
+                <!-- DIVISOR -->
 
                 <div class="section-divider"></div>
+
+                <!-- HISTÓRICO -->
 
                 <h2 class="section-title">
                     2. Histórico de Saúde

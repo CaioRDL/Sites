@@ -49,8 +49,15 @@ if($usuario){
 
         exit();
 
-    }
+    }else {
 
+        echo "<script> alert(' Erro de Login, tente novamente')</script>";
+        
+
+    }
+    
 }
 
-/* header('Location: http://192.168.1.19/isamaianstudio/index.php'); */
+
+
+

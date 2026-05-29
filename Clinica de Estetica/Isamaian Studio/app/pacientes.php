@@ -63,7 +63,7 @@
         Preencha os dados abaixo.
       </p>
 
-      <form action="" method="POST">
+      <form action="../controllers/paciente_controller.php" method="POST">
 
         <div class="form-grid">
 
